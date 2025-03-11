@@ -1,3 +1,4 @@
+import 'package:coffycup/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -229,23 +230,29 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 // Coffee Card (For Horizontal Scroll)
-class CoffeeCard extends StatelessWidget {
+class CoffeeCard extends StatefulWidget {
   final Map<String, dynamic> coffee;
 
   const CoffeeCard({super.key, required this.coffee});
 
+  @override
+  State<CoffeeCard> createState() => _CoffeeCardState();
+}
+
+class _CoffeeCardState extends State<CoffeeCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 4,
-        shadowColor: Colors.grey.withOpacity(0.2),
+        elevation: 5,
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
           child: Stack(
+            clipBehavior: Clip
+                .none, // Allow the Positioned widget to extend beyond the bounds
             children: [
               Column(
                 children: [
@@ -253,46 +260,50 @@ class CoffeeCard extends StatelessWidget {
                     height: 100,
                     width: 115,
                     decoration: BoxDecoration(
-                      color: Colors.orange.shade100, // Background color
+                      color: const Color.fromARGB(
+                          255, 87, 235, 210), // Background color
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
-                      child: Image.asset(coffee["image"], height: 100),
+                      child: Image.asset(widget.coffee["image"], height: 100),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(coffee["name"],
+                  Text(widget.coffee["name"],
                       textAlign: TextAlign.start,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold)),
-                  Row(
-                    children: [
-                      Text("\$${coffee["price"]}",
-                          style:
-                              const TextStyle(color: Colors.red, fontSize: 16)),
-                      const SizedBox(width: 40),
-                    ],
-                  ),
                 ],
               ),
               Positioned(
-                bottom: -10,
-                right: -10,
+                bottom: 1, // Position the price near the bottom
+                left: 5, // Position it near the left side
+                child: Text(
+                  "\$${widget.coffee["price"]}",
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red),
+                ),
+              ),
+              // This Positioned widget is now relative to the card and should stay inside it
+              Positioned(
+                bottom: -10, // Place it at the top of the container
+                right: -12, // Place it at the right side
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    color: btnbgcolor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
                   ),
                   child: IconButton(
                     icon: const FaIcon(
-                      FontAwesomeIcons.circlePlus,
+                      FontAwesomeIcons.plus,
+                      color: Colors.white,
+                      size: 18,
                     ),
                     onPressed: () {},
                   ),
@@ -307,20 +318,25 @@ class CoffeeCard extends StatelessWidget {
 }
 
 // Coffee List Item (For Vertical List)
-class CoffeeListItem extends StatelessWidget {
+class CoffeeListItem extends StatefulWidget {
   final Map<String, dynamic> coffee;
 
   const CoffeeListItem({super.key, required this.coffee});
 
   @override
+  State<CoffeeListItem> createState() => _CoffeeListItemState();
+}
+
+class _CoffeeListItemState extends State<CoffeeListItem> {
+  @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.asset(coffee["image"], height: 60),
-      title: Text(coffee["name"],
+      leading: Image.asset(widget.coffee["image"], height: 60),
+      title: Text(widget.coffee["name"],
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      subtitle: Text(coffee["size"],
+      subtitle: Text(widget.coffee["size"],
           style: const TextStyle(fontSize: 14, color: Colors.grey)),
-      trailing: Text("\$${coffee["price"]}",
+      trailing: Text("\$${widget.coffee["price"]}",
           style: const TextStyle(fontSize: 16, color: Colors.red)),
     );
   }

@@ -1,5 +1,6 @@
+import 'package:coffycup/presentations/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'presentations/screens/welcome_screen.dart';
+// import 'presentations/screens/welcome_screen.dart';
 
 void main() {
   runApp(CoffeeApp());
@@ -13,7 +14,7 @@ class CoffeeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.teal),
-      home: WelcomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
